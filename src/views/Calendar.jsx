@@ -22,6 +22,7 @@ function Calendar() {
 
     const [modalOpen, setModalOpen] = useState();
     const [scheduleData, setScheduleData] = useState();
+    const [compareDate, setCompareDate] = useState();
 
     function openModal() {
         setModalOpen(true);
@@ -113,18 +114,7 @@ function Calendar() {
                 arr.push({
                     date: prefixStart + (startDateNumber < 10 ? '0' + startDateNumber : startDateNumber.toString()),
                     day: dayIndex % 7,
-                    // // if(true){ 이부분어케함
-                    // schedule: "test" // 일정이 있을시 추가
-                    // // }
                 });
-
-                if(scheduleData){
-                    if (startDateNumber === scheduleData.scheduleDate) {
-                        arr.push({
-                            schedule: scheduleData.contents,
-                        })
-                    }
-                }
                 startDateNumber++;
                 dayIndex++;
             }
@@ -132,6 +122,23 @@ function Calendar() {
                 break;
             }
         }
+        if (scheduleData) {
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = 0; j < scheduleData.length; j++) {
+                    
+                    const compareNo = scheduleData[j].scheduleDate.substring(0, 8);
+                    
+                    let tempObj = {};
+                    if (arr[i].date === compareNo) {
+                        // 이 로직 연구해야함 객체 배열 해당 인덱스에 키 밸류로 넣어야함
+                        arr[i]["schedule"] = scheduleData[j].contents;
+                        arr[i]["time"] = scheduleData[j].scheduleDate.substring(8,12);
+                    }
+                }
+            }
+        }
+        
+        console.log(arr);
 
         let lineQty = Math.ceil(arr.length / 7);
         let targetLength = lineQty * 7;
@@ -181,14 +188,15 @@ function Calendar() {
         let minute = timeDate.getMinutes();
         let second = timeDate.getSeconds();
 
-        if (hour < 12 && hour != 0) {
+        if (hour < 12) {
             if (hour < 10) {
                 hour = "0" + hour;
             }
             hour = "오전 " + hour;
         }
         else {
-            if (hour === 0) {
+            hour = hour - 12
+            if (hour < 10) {
                 hour = "0" + hour;
             }
             hour = "오후 " + hour;
@@ -208,33 +216,38 @@ function Calendar() {
 
     // onMount
     useEffect(() => {
-        mainContent();
-        setTime(current());
-        setInterval(() => {
-            setTime(current());
-        }, 1000);
 
         let selectMonth = new Date();
         let nowYear = selectMonth.getFullYear();
         let nowMonth = selectMonth.getMonth() + 1;
         if (Number(nowMonth) < 10) nowMonth = '0' + nowMonth;
         selectMonth = nowYear + nowMonth;
+        nowMonth--;
 
         let userInfoStr = localStorage.getItem('userInfo');
         let userInfoObject = JSON.parse(userInfoStr);
 
-        fetch("http://localhost:8080/#/application/api/v1/calendars/selectMonthSchedule/" + selectMonth, {
+        fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/", {
             method: "POST",
+            cors: 'no-cors',
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                "userInfoObject": userInfoObject,
+                "memberNo": userInfoObject.memberNo,
                 "selectMonth": selectMonth,
             }),
         }).then((response) => {
             return response.json();
+        }).then((response) => {
+            mainContent(nowYear, nowMonth, null, response);
+            console.log(response);
         })
+
+        setTime(current());
+        setInterval(() => {
+            setTime(current());
+        }, 1000);
 
     }, []);
 
@@ -288,6 +301,7 @@ function Calendar() {
                         onClick={() => {
                             openModal()
                             setScheduleData(item)
+                            setCompareDate(item.date.substring(0,8))
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item)}
                     </button>
                 </div>
@@ -298,8 +312,9 @@ function Calendar() {
                         + "bg-cyan-50 hover:bg-cyan-50 text-cyan-300 hover:text-cyan-300 "
                         + todayStyle}
                         onClick={() => {
-                            openModal()
-                            setScheduleData(item)
+                            openModal();
+                            setScheduleData(item);
+                            setCompareDate(item.date.substring(0,8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item, today)}
                     </button>
                 </div>
@@ -311,8 +326,9 @@ function Calendar() {
                     <button key={i} className={mainSet + paramSet + hoverSet + todayStyle
                         + "bg-red-100 hover:bg-red-200 text-red-400 hover:text-red-600"}
                         onClick={() => {
-                            openModal()
-                            setScheduleData(item)
+                            openModal();
+                            setScheduleData(item);
+                            setCompareDate(item.date.substring(0,8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item)}
                     </button>
                 </div>
@@ -322,8 +338,9 @@ function Calendar() {
                     <button key={i} className={mainSet + paramSet + hoverSet + todayStyle
                         + "bg-red-100 hover:bg-red-200 text-red-200 hover:text-red-300"}
                         onClick={() => {
-                            openModal()
-                            setScheduleData(item)
+                            openModal();
+                            setScheduleData(item);
+                            setCompareDate(item.date.substring(0,8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item, today)}
                     </button>
                 </div>
@@ -335,8 +352,9 @@ function Calendar() {
                     <button key={i} className={mainSet + paramSet + hoverSet + todayStyle
                         + "bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-gray-600"}
                         onClick={() => {
-                            openModal()
-                            setScheduleData(item)
+                            openModal();
+                            setScheduleData(item);
+                            setCompareDate(item.date.substring(0,8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item)}
                     </button>
                 </div>
@@ -346,8 +364,9 @@ function Calendar() {
                     <button key={i} className={mainSet + paramSet + hoverSet + todayStyle
                         + "bg-slate-100 hover:bg-slate-200 text-slate-300 hover:text-gray-300"}
                         onClick={() => {
-                            openModal()
-                            setScheduleData(item)
+                            openModal();
+                            setScheduleData(item);
+                            setCompareDate(item.date.substring(0,8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item, today)}
                     </button>
                 </div>
@@ -385,7 +404,7 @@ function Calendar() {
                 <div className='font-mono text-cyan-600'>Sat.</div>
                 {makeDay}
             </div>
-            <Modal open={modalOpen} close={closeModal} header={scheduleData} today={today}></Modal>
+            <Modal open={modalOpen} close={closeModal} header={scheduleData} today={today} compareDate={compareDate}></Modal>
         </>
     )
 }

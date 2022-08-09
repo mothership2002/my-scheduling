@@ -15,7 +15,9 @@ const InsertButton = (props) => {
             </div>
         )
     }
-    return;
+    return(
+        <div></div>
+    );
 }
 
 export default InsertButton
