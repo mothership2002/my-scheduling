@@ -30,7 +30,7 @@ function Calendar() {
         setModalOpen(false);
     };
 
-    function mainContent(yearNo, monthNo, actionType) {
+    function mainContent(yearNo, monthNo, actionType, scheduleData) {
         let date = new Date();
         let month;
         let year;
@@ -77,9 +77,6 @@ function Calendar() {
         // 날짜 로직
         date.setDate(1);
         let firstDay = date.getDay();
-        // console.log(date);
-        // console.log(year);
-        // console.log(month);
 
         let nextMonthDate = new Date(0);
         nextMonthDate.setFullYear(year);
@@ -103,9 +100,9 @@ function Calendar() {
 
         // 일자 객체 배열
         let dayIndex = firstDay;
-        // console.log(firstDay);
+
         while (true) {
-            // console.log(endDateStr);
+
             if (startIndex < firstDay) {
                 // setDateArr([...dateArr, {date: ''}]);
                 arr.push({ date: '', });
@@ -116,10 +113,18 @@ function Calendar() {
                 arr.push({
                     date: prefixStart + (startDateNumber < 10 ? '0' + startDateNumber : startDateNumber.toString()),
                     day: dayIndex % 7,
-                    // if(true){ 이부분어케함
-                    schedule: "test" // 일정이 있을시 추가
-                    // }
+                    // // if(true){ 이부분어케함
+                    // schedule: "test" // 일정이 있을시 추가
+                    // // }
                 });
+
+                if(scheduleData){
+                    if (startDateNumber === scheduleData.scheduleDate) {
+                        arr.push({
+                            schedule: scheduleData.contents,
+                        })
+                    }
+                }
                 startDateNumber++;
                 dayIndex++;
             }
@@ -213,17 +218,19 @@ function Calendar() {
         let nowYear = selectMonth.getFullYear();
         let nowMonth = selectMonth.getMonth() + 1;
         if (Number(nowMonth) < 10) nowMonth = '0' + nowMonth;
-        selectMonth = nowYear + nowMonth + "%";
-        
+        selectMonth = nowYear + nowMonth;
+
         let userInfoStr = localStorage.getItem('userInfo');
         let userInfoObject = JSON.parse(userInfoStr);
-        fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/" + selectMonth, {
+
+        fetch("http://localhost:8080/#/application/api/v1/calendars/selectMonthSchedule/" + selectMonth, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 "userInfoObject": userInfoObject,
+                "selectMonth": selectMonth,
             }),
         }).then((response) => {
             return response.json();

@@ -45,10 +45,10 @@ export const Modal = (props) => {
                             <span>14:11</span>
                             <span className='w-80 text-center'>{header.schedule}</span>
                             <button id='updateButton' className="text-xs h-6 w-6 mx-1">
-                                <img src="images/update2.png" alt="" className='h-full w-full' />
+                                <img src="images/update2.png" alt="" className='h-full w-full hover:scale-110' />
                             </button>
                             <button id='deleteButton' className="text-xs h-6 w-6 mx-1">
-                                <img src="images/delete2.png" alt="" className='h-full w-full' />
+                                <img src="images/delete2.png" alt="" className='h-full w-full hover:scale-110' />
                             </button>
                         </div>
                         
