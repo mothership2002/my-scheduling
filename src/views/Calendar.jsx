@@ -124,21 +124,21 @@ function Calendar() {
         }
         if (scheduleData) {
             for (let i = 0; i < arr.length; i++) {
+                let tempList = new Array();
                 for (let j = 0; j < scheduleData.length; j++) {
-                    
+
                     const compareNo = scheduleData[j].scheduleDate.substring(0, 8);
-                    
-                    let tempObj = {};
+
                     if (arr[i].date === compareNo) {
-                        // 이 로직 연구해야함 객체 배열 해당 인덱스에 키 밸류로 넣어야함
-                        arr[i]["schedule"] = scheduleData[j].contents;
-                        arr[i]["time"] = scheduleData[j].scheduleDate.substring(8,12);
+                        let tempObj = {};
+                        tempObj["contents"] = scheduleData[j].contents;
+                        tempObj["time"] = scheduleData[j].scheduleDate.substring(8, 12);
+                        tempList.push(tempObj);
                     }
                 }
+                arr[i]["scheduleList"] = tempList;
             }
         }
-        
-        console.log(arr);
 
         let lineQty = Math.ceil(arr.length / 7);
         let targetLength = lineQty * 7;
@@ -278,7 +278,7 @@ function Calendar() {
     const [hoverSet, setHoverSet] = useRecoilState(hoverStyle);
 
     function scheduleList(item, today) {
-        if (item.schedule != null) {
+        if (item.scheduleList.length !== 0) {
             return scheduleAlert(today);
         }
     }
@@ -302,7 +302,7 @@ function Calendar() {
                         onClick={() => {
                             openModal()
                             setScheduleData(item)
-                            setCompareDate(item.date.substring(0,8))
+                            setCompareDate(item.date.substring(0, 8))
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item)}
                     </button>
                 </div>
@@ -315,7 +315,7 @@ function Calendar() {
                         onClick={() => {
                             openModal();
                             setScheduleData(item);
-                            setCompareDate(item.date.substring(0,8));
+                            setCompareDate(item.date.substring(0, 8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item, today)}
                     </button>
                 </div>
@@ -329,7 +329,7 @@ function Calendar() {
                         onClick={() => {
                             openModal();
                             setScheduleData(item);
-                            setCompareDate(item.date.substring(0,8));
+                            setCompareDate(item.date.substring(0, 8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item)}
                     </button>
                 </div>
@@ -341,7 +341,7 @@ function Calendar() {
                         onClick={() => {
                             openModal();
                             setScheduleData(item);
-                            setCompareDate(item.date.substring(0,8));
+                            setCompareDate(item.date.substring(0, 8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item, today)}
                     </button>
                 </div>
@@ -355,7 +355,7 @@ function Calendar() {
                         onClick={() => {
                             openModal();
                             setScheduleData(item);
-                            setCompareDate(item.date.substring(0,8));
+                            setCompareDate(item.date.substring(0, 8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item)}
                     </button>
                 </div>
@@ -367,7 +367,7 @@ function Calendar() {
                         onClick={() => {
                             openModal();
                             setScheduleData(item);
-                            setCompareDate(item.date.substring(0,8));
+                            setCompareDate(item.date.substring(0, 8));
                         }}><span>{Number(item.date.substring(6, 8))}</span>{scheduleList(item, today)}
                     </button>
                 </div>
@@ -377,9 +377,6 @@ function Calendar() {
 
     return (
         <>
-            <style>
-                <link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet"></link>
-            </style>
             <h1 className={titleSet + "m-5 text-3xl text-indigo-600"}>Calendar</h1>
             <h3 className={titleSet + 'text-indigo-700'}>{currentYear}년</h3>
             <div id='time' className={titleSet + "text-blue-700"}>{time}</div>
@@ -405,7 +402,7 @@ function Calendar() {
                 <div className='font-mono text-cyan-600'>Sat.</div>
                 {makeDay}
             </div>
-            <Modal open={modalOpen} close={closeModal} header={scheduleData} today={today} compareDate={compareDate}></Modal>
+            <Modal open={modalOpen} close={closeModal} scheduleData={scheduleData} today={today} compareDate={compareDate}></Modal>
         </>
     )
 }
