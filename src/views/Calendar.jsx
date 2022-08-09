@@ -9,7 +9,7 @@ import { buttonStyle } from "../store/atom/ButtonStyle"
 
 import { scheduleAlert } from "../common/ScheduleAlert"
 import { Modal } from "../component/Modal"
-
+import Swal from 'sweetalert2'
 
 function Calendar() {
 

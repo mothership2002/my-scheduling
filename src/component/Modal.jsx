@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import "../css/modal-style.css"
-import SubmitModal from './SubmitModal';
 import InsertButton from './InsertButton';
 
 export const Modal = (props) => {
@@ -79,7 +78,6 @@ export const Modal = (props) => {
                     </footer>
                 </section >
             ) : null}
-            <SubmitModal />
         </div >
     );
 };
