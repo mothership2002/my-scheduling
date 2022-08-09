@@ -1,7 +1,8 @@
 import React from 'react'
+import "../css/modal-style.css"
 
 export const SubmitModal = (props) => {
-    const { ID } = props;
+    const { memberNo } = props;
     return 
         // 모달이 열릴때 openModal 클래스가 생성된다.
         // <div className={open ? 'openModal modal' : 'modal'}>

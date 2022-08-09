@@ -63,7 +63,7 @@ export const Modal = (props) => {
                     </footer>
                 </section>
             ) : null}
-            <SubmitModal></SubmitModal>
+            <SubmitModal/>
         </div>
     );
 };

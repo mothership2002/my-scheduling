@@ -227,6 +227,7 @@ function Calendar() {
         let userInfoStr = localStorage.getItem('userInfo');
         let userInfoObject = JSON.parse(userInfoStr);
 
+        //모듈화 해야하나
         fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/", {
             method: "POST",
             cors: 'no-cors',
