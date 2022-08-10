@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import SubmitModal from './SubmitModal';
-import { addButtonStyle } from '../store/atom/AddButtonStyle';
+import { addButtonStyle } from '../store/atom/StyleAtom/AddButtonStyle';
 import { useRecoilState } from 'recoil';
 
 const InsertButton = (props) => {

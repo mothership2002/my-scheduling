@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import "../css/modal-style.css"
-import Swal from 'sweetalert2'
 
 export const SubmitModal = (props) => {
     const { addDate, memberNo, subModalOpen, close } = props;
@@ -144,11 +143,6 @@ export const SubmitModal = (props) => {
                                 }).then((response) => {
                                     console.log(response);
                                     // 성공 시 새로고침? 어케해야하지
-                                    Swal.fire({
-                                        text: '일정 추가가 완료 되었습니다.',
-                                        icon: 'success',
-                                        confirmButtonText: '닫기'
-                                    })
                                     setTimeout(function () {
                                         window.location.reload();
                                     }, 3000); // 3000밀리초 = 3초

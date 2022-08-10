@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
-import { inputStyle, divStyle, headerStyle, fontStyle, loginButtonStyle } from "../store/atom/LoginStyle"
-import { useRecoilState } from 'recoil';
+import { inputStyle, divStyle, headerStyle, fontStyle, loginButtonStyle } from "../store/atom/StyleAtom/LoginStyle"
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from "react-router-dom";
+import { userInfo, ID, PW } from '../store/atom/loginInfo'
+import { infoData, loginFetch } from '../store/selector/loginLogic'
+import { loginResult } from '../store/atom/loginResult'
 
 function Login() {
 

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil';
-import { tableStyle } from '../store/atom/TableStyle';
-import { mainStyle } from "../store/atom/ElementStyle"
-import { paramStyle } from "../store/atom/ParamaterStyle"
-import { hoverStyle } from "../store/atom/HoverStyle"
-import { titleStyle } from "../store/atom/TitleStyle"
-import { buttonStyle } from "../store/atom/ButtonStyle"
+
+import { userInfo } from '../store/atom/loginInfo'
+
+import { tableStyle } from '../store/atom/StyleAtom/TableStyle';
+import { mainStyle } from "../store/atom/StyleAtom/ElementStyle"
+import { paramStyle } from "../store/atom/StyleAtom/ParamaterStyle"
+import { hoverStyle } from "../store/atom/StyleAtom/HoverStyle"
+import { titleStyle } from "../store/atom/StyleAtom/TitleStyle"
+import { buttonStyle } from "../store/atom/StyleAtom/ButtonStyle"
 
 import { scheduleAlert } from "../common/ScheduleAlert"
 import { Modal } from "../component/Modal"
-import Swal from 'sweetalert2'
 
 function Calendar() {
 
