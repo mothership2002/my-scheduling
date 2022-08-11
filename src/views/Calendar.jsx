@@ -26,6 +26,8 @@ function Calendar() {
     const [scheduleData, setScheduleData] = useState();
     const [compareDate, setCompareDate] = useState();
 
+    const [userInfoSet, setUserInfoSet] = useRecoilState(userInfo);
+
     function openModal() {
         setModalOpen(true);
     };
@@ -216,6 +218,25 @@ function Calendar() {
         return currentTime;
     }
 
+    function selectList(){
+        fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/", {
+            method: "POST",
+            cors: 'no-cors',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "memberNo": userInfoSet,
+                "selectMonth": selectMonth,
+            }),
+        }).then((response) => {
+            return response.json();
+        }).then((response) => {
+            mainContent(nowYear, nowMonth, null, response);
+            console.log(response);
+        })
+    }
+
     // onMount
     useEffect(() => {
 
@@ -226,33 +247,14 @@ function Calendar() {
         selectMonth = nowYear + nowMonth;
         nowMonth--;
 
-        let userInfoStr = localStorage.getItem('userInfo');
-        let userInfoObject = JSON.parse(userInfoStr);
-
-        //모듈화 해야하나
-        fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/", {
-            method: "POST",
-            cors: 'no-cors',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                "memberNo": userInfoObject.memberNo,
-                "selectMonth": selectMonth,
-            }),
-        }).then((response) => {
-            return response.json();
-        }).then((response) => {
-            mainContent(nowYear, nowMonth, null, response);
-            console.log(response);
-        })
+        selectList();
 
         setTime(current());
         setInterval(() => {
             setTime(current());
         }, 1000);
 
-    }, []);
+    }, [userInfoSet]);
 
     // const makeDay = dateArr.map((item, i) => {
     //     return <div key={i}>{Number(item.date.substring(6,8))}</div>

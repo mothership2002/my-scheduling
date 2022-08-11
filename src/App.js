@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import Calendar from './views/Calendar';
 import { RecoilRoot } from 'recoil';
 import {
   BrowserRouter,
@@ -10,6 +9,7 @@ import {
 } from "react-router-dom";
 import ReactDOM from 'react-dom/client';
 import Login from './component/Login';
+import Calendar from './views/Calendar';
 
 
 function App() {
@@ -18,9 +18,8 @@ function App() {
       {/* <BrowserRouter> */}
       <HashRouter> {/* 도메인#/주소 */}
         <Routes>
-          <Route path="/application" element={<Calendar />}>
-          </Route>
-          <Route path="/" element={<Login />}></Route>
+          {/* <Route path="/application" element={<Calendar />}/> */}
+          <Route path="/" element={<Login />}/>
         </Routes>
       </HashRouter>
       {/* </BrowserRouter> */}
