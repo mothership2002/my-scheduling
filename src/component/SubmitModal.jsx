@@ -3,6 +3,8 @@ import { useRecoilState } from 'recoil';
 import { userInfo } from '../store/atom/loginInfo'
 import "../css/modal-style.css"
 
+import { resultList } from "../store/mainContents"
+
 export const SubmitModal = (props) => {
     const { addDate, memberNo, subModalOpen, close } = props;
 
@@ -10,6 +12,7 @@ export const SubmitModal = (props) => {
     const [minuteData, setMinuteData] = useState();
     const [contentsData, setContentsData] = useState();
     const [userInfoSet, setUserInfoSet] = useRecoilState(userInfo);
+    const [resultArray, setResultArray] = useRecoilState(resultList);
 
     return (
         <div className={(subModalOpen ? 'openModal modal' : 'modal') + " subModal"}>
@@ -147,6 +150,7 @@ export const SubmitModal = (props) => {
                                     if (response.Length != 0) {
                                         alert("일정추가")
                                         console.log(response);
+                                        setResultArray(response)
                                         setTimeout(function () {
                                             window.location.reload();
                                         }, 1000);

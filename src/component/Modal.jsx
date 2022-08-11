@@ -1,15 +1,47 @@
 import React, { useEffect, useState } from 'react'
+import { useRecoilState } from 'recoil';
+
+import { userInfo } from '../store/atom/loginInfo'
+
 import "../css/modal-style.css"
 import InsertButton from './InsertButton';
+
+import { resultList } from "../store/mainContents"
+
 
 export const Modal = (props) => {
     // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
     const { open, close, scheduleData, today, compareDate } = props;
 
+    const [resultArray, setResultArray] = useRecoilState(resultList);
+    const [userInfoSet, setUserInfoSet] = useRecoilState(userInfo);
+
     let selectDate;
     let selectDateMonth;
     let selectDateDay;
     let rendering;
+
+    function deleteFunction(scheduleNo, yyyyMMdd) {
+        fetch("http://localhost:8080/api/v1/calendars/delete-schedule/", {
+            method: "POST",
+            cors: 'no-cors',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "scheduleNo": scheduleNo,
+                "selectMonth": yyyyMMdd,
+                "memberNo": userInfoSet
+            }),
+        }).then((response) => {
+            return response.json();
+        }).then((response) => {
+            setResultArray(response)
+            setTimeout(function () {
+                window.location.reload();
+            }, 1000);
+        })
+    }
 
     if (scheduleData !== undefined) {
         selectDateMonth = Number(scheduleData.date.substring(4, 6));
@@ -31,6 +63,7 @@ export const Modal = (props) => {
                 if (today > compareDate) {
                     return (
                         <div key={i} id="content" className='border h-11 rounded-xl m-1 px-1' >
+                            <input type="hidden" value={items.scheduleData} />
                             <span>{hour + ":" + minute}</span>
                             <span className='w-80 text-center'>{items.contents}</span>
                             <div className='h-12 w-12 mx-2'></div>
@@ -40,15 +73,16 @@ export const Modal = (props) => {
                 else {
                     return (
                         <div key={i} id="content" className='border h-11 rounded-xl m-1 px-1'>
+                            <input type="hidden" value={items.scheduleNo} />
                             <span>{hour + ":" + minute}</span>
                             <span className='w-80 text-center'>{items.contents}</span>
-                            <button id='updateButton' className="text-xs h-6 w-6 mx-1" onClick={() => { 
-
-                            }}>
-                                <img src="images/update2.png" alt="" className='h-full w-full hover:scale-110' />
-                            </button>
-                            <button id='deleteButton' className="text-xs h-6 w-6 mx-1" onClick={() => { 
-                                
+                            {/* <button id='updateButton' className="text-xs h-6 w-6 mx-1" onClick={() => {
+                            </button> */}
+                            <button id='deleteButton' className="text-xs h-6 w-6 mx-1" onClick={() => {
+                                if(window.confirm("삭제하시겠습니까?")){
+                                    deleteFunction(items.scheduleNo, items.yyyyMM);
+                                    alert("삭제되었습니다.")
+                                }
                             }}>
                                 <img src="images/delete2.png" alt="" className='h-full w-full hover:scale-110' />
                             </button>

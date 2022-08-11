@@ -13,6 +13,8 @@ import { buttonStyle } from "../store/atom/StyleAtom/ButtonStyle"
 import { scheduleAlert } from "../common/ScheduleAlert"
 import { Modal } from "../component/Modal"
 
+import { resultList } from "../store/mainContents"
+
 function Calendar() {
 
     const [dateArr, setDateArr] = useState([]);
@@ -27,6 +29,7 @@ function Calendar() {
     const [compareDate, setCompareDate] = useState();
 
     const [userInfoSet, setUserInfoSet] = useRecoilState(userInfo);
+    const [resultArray, setResultArray] = useRecoilState(resultList);
 
     function openModal() {
         setModalOpen(true);
@@ -34,8 +37,8 @@ function Calendar() {
     function closeModal() {
         setModalOpen(false);
     };
-
-    function mainContent(yearNo, monthNo, actionType, scheduleData) {
+    // scheduleData
+    function mainContent(yearNo, monthNo, actionType, resultArray) {
         let date = new Date();
         let month;
         let year;
@@ -124,17 +127,19 @@ function Calendar() {
                 break;
             }
         }
-        if (scheduleData) {
+        if (resultArray) {
             for (let i = 0; i < arr.length; i++) {
                 let tempList = new Array();
-                for (let j = 0; j < scheduleData.length; j++) {
+                for (let j = 0; j < resultArray.length; j++) {
 
-                    const compareNo = scheduleData[j].scheduleDate.substring(0, 8);
+                    const compareNo = resultArray[j].scheduleDate.substring(0, 8);
 
                     if (arr[i].date === compareNo) {
                         let tempObj = {};
-                        tempObj["contents"] = scheduleData[j].contents;
-                        tempObj["time"] = scheduleData[j].scheduleDate.substring(8, 12);
+                        tempObj["scheduleNo"] = resultArray[j].scheduleNo;
+                        tempObj["contents"] = resultArray[j].contents;
+                        tempObj["yyyyMM"] = resultArray[j].scheduleDate.substring(0,6)
+                        tempObj["time"] = resultArray[j].scheduleDate.substring(8, 12);
                         tempList.push(tempObj);
                     }
                 }
@@ -220,10 +225,10 @@ function Calendar() {
         let tempNum;
         if (selectMonth === undefined) {
             if (actionType === "prev") {
-                month < 8 ? tempNum = "0" + (month) : tempNum = (month).toString()
+                month <= 8 ? tempNum = "0" + (month) : tempNum = (month).toString()
             }
             else if (actionType === "next") {
-                month < 8 ? tempNum = "0" + (month + 1 + 1) : tempNum = Number(month + 1 + 1).toString()
+                month <= 8 ? tempNum = "0" + (month + 1 + 1) : tempNum = Number(month + 1 + 1).toString()
             }
             let tempYear = year;
 
@@ -235,7 +240,6 @@ function Calendar() {
                 tempYear = tempYear + 1;
                 tempNum = "01"
             }
-
             selectMonth = tempYear + tempNum;
         }
         return (
@@ -252,15 +256,16 @@ function Calendar() {
             }).then((response) => {
                 return response.json();
             }).then((response) => {
+                setResultArray(response);
+                console.log(resultArray);
                 mainContent(year, month, actionType, response);
-                console.log(response);
             })
         )
     }
 
     // onMount
     useEffect(() => {
-        
+
         let selectMonth = new Date();
         let nowYear = selectMonth.getFullYear();
         let nowMonth = selectMonth.getMonth() + 1;
