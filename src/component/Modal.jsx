@@ -42,10 +42,14 @@ export const Modal = (props) => {
                         <div key={i} id="content" className='border h-11 rounded-xl m-1 px-1'>
                             <span>{hour + ":" + minute}</span>
                             <span className='w-80 text-center'>{items.contents}</span>
-                            <button id='updateButton' className="text-xs h-6 w-6 mx-1">
+                            <button id='updateButton' className="text-xs h-6 w-6 mx-1" onClick={() => { 
+
+                            }}>
                                 <img src="images/update2.png" alt="" className='h-full w-full hover:scale-110' />
                             </button>
-                            <button id='deleteButton' className="text-xs h-6 w-6 mx-1">
+                            <button id='deleteButton' className="text-xs h-6 w-6 mx-1" onClick={() => { 
+                                
+                            }}>
                                 <img src="images/delete2.png" alt="" className='h-full w-full hover:scale-110' />
                             </button>
                         </div>

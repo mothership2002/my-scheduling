@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useRecoilState } from 'recoil';
+import { userInfo } from '../store/atom/loginInfo'
 import "../css/modal-style.css"
 
 export const SubmitModal = (props) => {
@@ -7,6 +9,7 @@ export const SubmitModal = (props) => {
     const [hourData, setHourData] = useState();
     const [minuteData, setMinuteData] = useState();
     const [contentsData, setContentsData] = useState();
+    const [userInfoSet, setUserInfoSet] = useRecoilState(userInfo);
 
     return (
         <div className={(subModalOpen ? 'openModal modal' : 'modal') + " subModal"}>
@@ -122,7 +125,7 @@ export const SubmitModal = (props) => {
                     <footer className="flex justify-center">
                         <button className="add font-['jalnan'] h-full text-base" id="submitButton" onClick={() => {
                             if (hourData == "" || minuteData == "" || hourData === undefined || minuteData === undefined || contentsData == "" || contentsData === undefined) {
-                                //스윗얼랏쓸까
+                                alert("시간과 내용을 확인해주세요.")
                             }
                             else {
                                 fetch("http://localhost:8080/api/v1/calendars/insert-schedule", {
@@ -132,7 +135,7 @@ export const SubmitModal = (props) => {
                                         "Content-Type": "application/json",
                                     },
                                     body: JSON.stringify({
-                                        "memberNo": memberNo,
+                                        "memberNo": userInfoSet,
                                         "addDate": addDate,
                                         "addHour": hourData,
                                         "addMinute": minuteData,
@@ -141,11 +144,13 @@ export const SubmitModal = (props) => {
                                 }).then((response) => {
                                     return response.json()
                                 }).then((response) => {
-                                    console.log(response);
-                                    // 성공 시 새로고침? 어케해야하지
-                                    setTimeout(function () {
-                                        window.location.reload();
-                                    }, 3000); // 3000밀리초 = 3초
+                                    if (response.Length != 0) {
+                                        alert("일정추가")
+                                        console.log(response);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 1000);
+                                    }
                                 })
                             }
                         }}>일정 추가하기</button>

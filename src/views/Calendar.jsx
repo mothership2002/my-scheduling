@@ -39,7 +39,6 @@ function Calendar() {
         let date = new Date();
         let month;
         let year;
-
         if (yearNo === undefined && monthNo === undefined) {
             year = date.getFullYear();
             month = date.getMonth();
@@ -60,7 +59,6 @@ function Calendar() {
 
         setCurrentMonth(month);
         setCurrentYear(year);
-
         month = month + 1;
         let startDateStr = year + '' + (month < 10 ? '0' + month : month.toString()) + '01';
 
@@ -218,43 +216,64 @@ function Calendar() {
         return currentTime;
     }
 
-    function selectList(){
-        fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/", {
-            method: "POST",
-            cors: 'no-cors',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                "memberNo": userInfoSet,
-                "selectMonth": selectMonth,
-            }),
-        }).then((response) => {
-            return response.json();
-        }).then((response) => {
-            mainContent(nowYear, nowMonth, null, response);
-            console.log(response);
-        })
+    function selectList(year, month, actionType, selectMonth) {
+        let tempNum;
+        if (selectMonth === undefined) {
+            if (actionType === "prev") {
+                month < 8 ? tempNum = "0" + (month) : tempNum = (month).toString()
+            }
+            else if (actionType === "next") {
+                month < 8 ? tempNum = "0" + (month + 1 + 1) : tempNum = Number(month + 1 + 1).toString()
+            }
+            let tempYear = year;
+
+            if (tempNum == "00") {
+                tempYear = tempYear - 1;
+                tempNum = "12";
+            }
+            else if (tempNum == "13") {
+                tempYear = tempYear + 1;
+                tempNum = "01"
+            }
+
+            selectMonth = tempYear + tempNum;
+        }
+        return (
+            fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/", {
+                method: "POST",
+                cors: 'no-cors',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    "memberNo": userInfoSet,
+                    "selectMonth": selectMonth,
+                }),
+            }).then((response) => {
+                return response.json();
+            }).then((response) => {
+                mainContent(year, month, actionType, response);
+                console.log(response);
+            })
+        )
     }
 
     // onMount
     useEffect(() => {
-
+        
         let selectMonth = new Date();
         let nowYear = selectMonth.getFullYear();
         let nowMonth = selectMonth.getMonth() + 1;
         if (Number(nowMonth) < 10) nowMonth = '0' + nowMonth;
         selectMonth = nowYear + nowMonth;
-        nowMonth--;
-
-        selectList();
-
+        nowMonth--
+        selectList(nowYear, nowMonth, null, selectMonth);
         setTime(current());
         setInterval(() => {
             setTime(current());
         }, 1000);
 
-    }, [userInfoSet]);
+    }, []);
 
     // const makeDay = dateArr.map((item, i) => {
     //     return <div key={i}>{Number(item.date.substring(6,8))}</div>
@@ -387,12 +406,12 @@ function Calendar() {
 
             <div id='sub-title'>
                 <button id='before' className={buttonSet} onClick={() => {
-                    mainContent(currentYear, Number(currentMonth), 'prev')
+                    selectList(currentYear, Number(currentMonth), 'prev')
                 }}>◀</button>
                 <div className={titleSet + "month"}>{monthName}</div>
 
                 <button id='next' className={buttonSet} onClick={() => {
-                    mainContent(currentYear, Number(currentMonth), 'next')
+                    selectList(currentYear, Number(currentMonth), 'next')
                 }}>▶</button>
             </div>
 
