@@ -149,7 +149,6 @@ export const SubmitModal = (props) => {
                                 }).then((response) => {
                                     if (response.Length != 0) {
                                         alert("일정추가")
-                                        console.log(response);
                                         setResultArray(response)
                                         setTimeout(function () {
                                             window.location.reload();

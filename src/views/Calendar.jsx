@@ -257,7 +257,6 @@ function Calendar() {
                 return response.json();
             }).then((response) => {
                 setResultArray(response);
-                console.log(resultArray);
                 mainContent(year, month, actionType, response);
             })
         )
