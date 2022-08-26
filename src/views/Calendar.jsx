@@ -243,7 +243,7 @@ function Calendar() {
             selectMonth = tempYear + tempNum;
         }
         return (
-            fetch("http://localhost:8080/api/v1/calendars/selectMonthSchedule/", {
+            fetch("http://aiueo.iptime.org:8080/api/v1/calendars/selectMonthSchedule/", {
                 method: "POST",
                 cors: 'no-cors',
                 headers: {

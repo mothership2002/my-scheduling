@@ -22,7 +22,7 @@ export const Modal = (props) => {
     let rendering;
 
     function deleteFunction(scheduleNo, yyyyMMdd) {
-        fetch("http://localhost:8080/api/v1/calendars/delete-schedule/", {
+        fetch("http://aiueo.iptime.org:8080/api/v1/calendars/delete-schedule/", {
             method: "POST",
             cors: 'no-cors',
             headers: {
