@@ -52,7 +52,7 @@ function Login() {
                                     return;
                                 }
                                 else {
-                                    fetch("http://aiueo.iptime.org:8080/api/v1/calendars/login", {
+                                    fetch("http://localhost:8080/api/v1/calendars/login", {
                                         method: "POST",
                                         headers: {
                                             "Content-Type": "application/json",
